@@ -1,13 +1,9 @@
 package com.example.devtools;
 
-import atlantafx.base.controls.Message;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -18,40 +14,16 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
-import org.xml.sax.InputSource;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.StringReader;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegexController {
 
-    @FXML
-    public Button apiRequestButton;
-    @FXML
-    public Button dbRequestButton;
-    @FXML
-    public Button parseButton;
-    @FXML
-    public TextArea parsedTextArea;
-    @FXML
+
     public Label infoLabel;
     @FXML
-    public TextFlow textFlow;
-    @FXML
-    public TextFlow mainTextFlow;
     private final PauseTransition regexPause;
 
     //private static final String JSON_KEYWORDS = "\\b(true|false|null)\\b";
