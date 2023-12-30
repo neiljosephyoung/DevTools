@@ -1,0 +1,46 @@
+.property {
+    -fx-fill: BLUEVIOLET;
+}
+
+.brace {
+    -fx-fill: FIREBRICK;
+    -fx-font-weight: bold;
+}
+
+.string {
+    -fx-fill: DARKGREEN;
+}
+
+.value {
+    -fx-fill: BLACK;
+}
+
+.keyword {
+    -fx-fill: DEEPSKYBLUE;
+}
+.number{
+    -fx-fill: ORANGE;
+}
+
+
+
+.tagmark {
+    -fx-fill: gray;
+}
+.anytag {
+    -fx-fill: crimson;
+}
+.paren {
+    -fx-fill: firebrick;
+    -fx-font-weight: bold;
+}
+.attribute {
+    -fx-fill: darkviolet;
+}
+.avalue {
+    -fx-fill: black;
+}
+
+.comment {
+	-fx-fill: teal;
+}

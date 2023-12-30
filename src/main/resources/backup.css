@@ -1,0 +1,73 @@
+/* style.css */
+
+.lineno{
+    -fx-background-color: #313335;
+    -fx-font-size: 13px;
+    -fx-text-alignment: left;
+    -fx-border-color: #555555;
+    -fx-text-fill: WHITE;
+}
+
+.code-area .text {
+    fx-font-family: 'Arial';
+    -fx-font-size: 14px;
+
+}
+
+.caret {
+    -fx-stroke: red;
+}
+
+.code-area {
+    fx-font-family: 'Arial';
+    -fx-font-size: 14px;
+    -fx-background-color: #3f3f3f;
+}
+
+
+.property {
+    -fx-fill: BLUEVIOLET;
+}
+
+.brace {
+    -fx-fill: FIREBRICK;
+    -fx-font-weight: bold;
+}
+
+.string {
+    -fx-fill: DARKGREEN;
+}
+
+.value {
+    -fx-fill: WHITE;
+}
+
+.keyword {
+    -fx-fill: DEEPSKYBLUE;
+}
+.number{
+    -fx-fill: ORANGE;
+}
+
+.tagmark {
+    -fx-fill: gray;
+}
+.anytag {
+    -fx-fill: crimson;
+}
+
+.paren {
+    -fx-fill: firebrick;
+    -fx-font-weight: bold;
+}
+.attribute {
+    -fx-fill: darkviolet;
+}
+
+.avalue {
+    -fx-fill: WHITE;
+}
+
+.comment {
+	-fx-fill: teal;
+}

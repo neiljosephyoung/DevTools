@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<root>
+            
+    
+    <entry id="1" value="Nil">
+                        
+        
+        <data>Name1</data>
+                        
+        
+        <description>Entry with Nil value</description>
+                    
+    
+    </entry>
+            
+    
+    <entry id="2" value="Nil">
+                        
+        
+        <data>Name2</data>
+                        
+        
+        <description>Another entry with Nil value</description>
+                    
+    
+    </entry>
+            
+    
+    <entry id="3" value="NotNil">
+                        
+        
+        <data>Name3</data>
+                        
+        
+        <description>Entry with NotNil value</description>
+                    
+    
+    </entry>
+            
+    
+    <entry id="4" value="Nil">
+                        
+        
+        <data>Name4</data>
+                        
+        
+        <description>Yet another entry with Nil value</description>
+                    
+    
+    </entry>
+        
+
+</root>
