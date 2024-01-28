@@ -1,4 +1,4 @@
-module com.example.devtools {
+module com.example.goodbodytools {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
@@ -23,6 +23,6 @@ module com.example.devtools {
     requires jdk.xml.dom;
 
 
-    opens com.example.devtools to javafx.fxml;
-    exports com.example.devtools;
+    opens com.example.goodbodytools to javafx.fxml;
+    exports com.example.goodbodytools;
 }

@@ -36,7 +36,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="826.0" prefWidth="1011.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devtools.MainController">
+<VBox prefHeight="826.0" prefWidth="1011.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goodbodytools.MainController">
     <BorderPane fx:id="mainBorderPane" prefHeight="852.0" prefWidth="1011.0">
         <left>
           <Accordion fx:id="menuAccordion" prefHeight="423.0" prefWidth="165.0" BorderPane.alignment="CENTER">

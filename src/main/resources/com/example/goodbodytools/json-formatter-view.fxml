@@ -8,7 +8,7 @@
 
 <?import atlantafx.base.controls.ModalPane?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devtools.TextFormatterController">
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goodbodytools.JsonFormatterController">
 <!--    <padding>-->
 <!--        <Insets top="20.0" right="0" bottom="0" left="0" />-->
 <!--    </padding>-->

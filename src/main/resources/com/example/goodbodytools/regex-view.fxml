@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import org.fxmisc.richtext.CodeArea?>
-<VBox prefHeight="770.0" prefWidth="856.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.devtools.RegexController">
+<VBox prefHeight="770.0" prefWidth="856.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goodbodytools.RegexController">
     <VBox>
         <CodeArea fx:id="regexCodeArea" editable="true" prefHeight="600.0" prefWidth="400.0" />
     </VBox>
