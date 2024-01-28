@@ -3,7 +3,6 @@ import atlantafx.base.controls.Card;
 import atlantafx.base.controls.ModalPane;
 import atlantafx.base.controls.Tile;
 import atlantafx.base.theme.Styles;
-import atlantafx.base.theme.Tweaks;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -12,7 +11,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -24,9 +22,6 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignX;
@@ -35,6 +30,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.goodbodytools.MainApp.*;
 
 
 public class XmlFormatterController {
@@ -81,10 +77,6 @@ public class XmlFormatterController {
     public XmlFormatterController() {
         // Initialize PauseTransition with a delay of 1 second (adjust as needed)
         textformatPause = new PauseTransition(Duration.seconds(0));
-        // Set an action to be performed when the pause is finished
-//        textformatPause.setOnFinished(event -> {
-//            handleTextAreaChanged();
-//        });
     }
 
 
@@ -94,8 +86,8 @@ public class XmlFormatterController {
         card1.getStyleClass().add(Styles.ELEVATED_2);
 
         card1.setHeader(new Tile(
-                "Text Formatter",
-                "This service will auto parse for XML or JSON structures just paste in the data"
+                "XML Formatter",
+                "This service will auto parse for XML structures just paste in the data"
         ));
         //card1.setBody(new Label("This is content"));
 
@@ -125,12 +117,10 @@ public class XmlFormatterController {
         initCodeAreasDefault();
 
         buildDataOptionsTile();
-        mainCodeArea.replaceText(DataUtils.readFile("mainCodeArea.txt"));
-        parsedCodeArea.replaceText(DataUtils.readFile("parsedCodeArea.txt"));
-
+        mainCodeArea.replaceText(TEMP_DATA.getXmlText());
+        //mainCodeArea.replaceText(DataUtils.readFile("mainCodeArea.txt"));
+        //parsedCodeArea.replaceText(DataUtils.readFile("parsedCodeArea.txt"));
         mainCodeArea.requestFocus();
-        handleTextAreaChanged();
-
     }
 
     private void buildDataOptionsTile(){
@@ -146,9 +136,7 @@ public class XmlFormatterController {
                 Styles.BUTTON_OUTLINED, Styles.SUCCESS
         );
         formatBtn.setMnemonicParsing(true);
-        formatBtn.setOnAction(e ->{
-            formatText(mainCodeArea.getText());
-        });
+        formatBtn.setOnAction(e -> formatText(mainCodeArea.getText()));
 
         Button minifyBtn = new Button(
                 "Minify", new FontIcon(MaterialDesignC.CHECK)
@@ -157,9 +145,7 @@ public class XmlFormatterController {
                 Styles.BUTTON_OUTLINED, Styles.SUCCESS
         );
         minifyBtn.setMnemonicParsing(true);
-        minifyBtn.setOnAction(e ->{
-            minifyButtonClick();
-        });
+        minifyBtn.setOnAction(e -> minifyButtonClick());
 
 //        minify.setAction(minifyBtn);
 //        minify.setActionHandler(minifyBtn::fire);
@@ -192,7 +178,9 @@ public class XmlFormatterController {
         );
         removeNilLines.setOnAction(e -> {
             try {
-                parsedCodeArea.replaceText(DataUtils.removeEntriesWithNilValue(parsedCodeArea.getText()));
+                if (!parsedCodeArea.getText().isEmpty()){
+                    parsedCodeArea.replaceText(DataUtils.removeEntriesWithNilValue(parsedCodeArea.getText()));
+                }
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -250,7 +238,6 @@ public class XmlFormatterController {
         parsedCodeArea.setContextMenu(buildContextMenu(parsedCodeArea));
         parsedCodeArea.setParagraphGraphicFactory(LineNumberFactory.get(parsedCodeArea));
         parsedCodeArea.textProperty().addListener((obs, oldText, newText) -> parsedCodeArea.setStyleSpans(0, computeXmlHighlighting(newText)));
-        // Set initial text (optional)
 
         // Attach the context menu to the CodeArea
         mainCodeArea.setContextMenu(buildContextMenu(mainCodeArea));
@@ -275,6 +262,10 @@ public class XmlFormatterController {
         menuItems.add(new MenuItem("Undo"));
         menuItems.add(new MenuItem("Redo"));
 
+        for (MenuItem item : menuItems) {
+            item.setStyle(CONTEXT_FONT);
+        }
+
         // Set actions for menu items
         menuItems.get(0).setOnAction(e -> codeArea.cut());
         menuItems.get(1).setOnAction(e -> codeArea.copy());
@@ -289,10 +280,19 @@ public class XmlFormatterController {
         // Add menu items from the ArrayList to the context menu
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().addAll(menuItems);
-
         return contextMenu;
     }
 
+//    private void handleTextAreaChanged() {
+//        // This method will be called after the specified pause duration
+//        String rawText = mainCodeArea.getText();
+//        if (rawText.isEmpty()){
+//            System.out.println("No data detected.");
+//            return;
+//        }
+//        parsedCodeArea.clear();
+//        formatText(rawText);
+//    }
 
     private void handleTextAreaChanged() {
         // This method will be called after the specified pause duration
@@ -303,24 +303,38 @@ public class XmlFormatterController {
         }
         parsedCodeArea.clear();
 
-        formatText(rawText);
+        // Check if the data looks like JSON
+        if (DataUtils.isXML(rawText)) {
+            String json = DataUtils.parseXmlToPretty(rawText);
+            System.out.println("Detected JSON data.");
+
+            Platform.runLater(()->{
+                infoLabel.setText("XML Data Detected");
+                parsedCodeArea.clear();
+                parsedCodeArea.replaceText(json);
+                TEMP_DATA.setXmlText(json);
+            });
+            return;
+        }
+
+        Platform.runLater(textformatPause::playFromStart);
     }
 
     private void formatText(String rawText) {
-        // Check if the data looks like XML
-        if (DataUtils.isXML(rawText)){
-            String xml = DataUtils.parseXmlToPretty(rawText);
-            Platform.runLater(() ->{
-                infoLabel.setText("XML Data Detected");
-                parsedCodeArea.replaceText(xml);
-                DataUtils.writeFile("parsedCodeArea.txt",xml);
-                DataUtils.writeFile("mainCodeArea.txt",xml);
-            });
-        }
-        // Handle other data formats if needed
-        else {
-            infoLabel.setText("Unsupported data format");
-            System.out.println("Unsupported data format.");
+        if (!rawText.isEmpty()) {
+            if (DataUtils.isXML(rawText)){
+                String xml = DataUtils.parseXmlToPretty(rawText);
+                Platform.runLater(() ->{
+                    infoLabel.setText("XML Data Detected");
+                    parsedCodeArea.replaceText(xml);
+                    TEMP_DATA.setXmlText(xml);
+                    handleTextAreaChanged();
+                });
+            }
+            else {
+                infoLabel.setText("Unsupported data format");
+                System.out.println("Unsupported data format.");
+            }
         }
     }
 
@@ -372,10 +386,11 @@ public class XmlFormatterController {
     @FXML
     protected void minifyButtonClick(){
         String rawJson = mainCodeArea.getText();
-        System.out.println("Minify clicked: "+rawJson);
-        String parsed = DataUtils.minifyText(rawJson);
-
-        parsedCodeArea.replaceText(parsed);
+        if (!rawJson.isEmpty()) {
+            System.out.println("Minify clicked: "+rawJson);
+            String parsed = DataUtils.minifyText(rawJson);
+            parsedCodeArea.replaceText(parsed);
+        }
     }
 
     private void showErrorAlert(String errorData){

@@ -15,12 +15,15 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static com.example.goodbodytools.MainApp.LOGGER;
 
 public class DataUtils {
 
@@ -41,7 +44,7 @@ public class DataUtils {
     }
     public static String parseXmlToPretty(String rawText) {
         try {
-            rawText = rawText.replaceFirst("\n", "");
+            //rawText = rawText.replaceFirst("\n", "");
             return printXml(parseStringToXmlDocument(rawText));
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -55,6 +58,26 @@ public class DataUtils {
         return builder.parse(is);
     }
 
+    private static boolean isXmlFormatted(Document document) {
+        // Check if the document has indentation in its content
+        var xmlString = documentToString(document);
+        System.out.println("var: "+xmlString);
+        return xmlString.contains("\n") || xmlString.contains("\r") || xmlString.contains("\t");
+    }
+    private static String documentToString(Document document) {
+        // Convert the Document to String
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(document);
+            StringWriter writer = new StringWriter();
+            StreamResult result = new StreamResult(writer);
+            transformer.transform(source, result);
+            return writer.toString();
+        } catch (TransformerException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private static String printXml(Document document) throws Exception {
         // Use a transformer to print the XML
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -62,10 +85,16 @@ public class DataUtils {
 
         // Print the XML content to the console
         DOMSource source = new DOMSource(document);
+        System.out.println("dom: "+source);
         StreamResult result = new StreamResult(new java.io.StringWriter());
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.transform(source, result);
+        if (!isXmlFormatted(document)) {
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(source, result);
+        } else {
+            return documentToString(document);
+        }
 
         return result.getWriter().toString();
     }
@@ -83,6 +112,7 @@ public class DataUtils {
                 // Try parsing as a JSON array
                 JSONArray arr = new JSONArray(rawJson);
                 parsedData = arr.toString(4);
+
                 return parsedData;
             } catch (JSONException e2) {
                 return parsedData;
@@ -145,37 +175,6 @@ public static String toggleCase(String data){
         return data;
     }
 
-    public static String readFile(String fileName) {
-        StringBuilder data = new StringBuilder();
-        String path = "src/main/java/com/example/goodbodytools/tempFiles/"+fileName;
-        try (InputStream inputStream = new FileInputStream(path)) {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    data.append(line).append(System.lineSeparator()); // Append newline character after each line
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(data);
-        return data.toString();
-    }
-
-    public static void writeFile(String fileName, String data) {
-        String path = "src/main/java/com/example/goodbodytools/tempFiles/"+fileName;
-        System.out.println("path: "+path);
-        try (OutputStream outputStream = new FileOutputStream(path);
-             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
-            System.out.println("file path: " + path);
-            System.out.println("writing data: " + data);
-            writer.write(data);
-            System.out.println("Data written successfully.");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static String minifyText(String rawJson) {
         try{
             String minify = rawJson.replaceAll("\n","").replaceAll("\r","").replaceAll("\t","").replaceAll(" {4}", "").trim();
@@ -183,6 +182,7 @@ public static String toggleCase(String data){
             return minify;
         }catch (Exception e){
             e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
         return ""; 
     }
@@ -203,17 +203,6 @@ public static String toggleCase(String data){
                 parent.removeChild(element);
             }
         }
-        return convertDocumentToString(document);
-    }
-
-    private static String convertDocumentToString(Document document) throws Exception {
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-
-        // Convert the document to a string
-        StringWriter writer = new StringWriter();
-        transformer.transform(new DOMSource(document), new StreamResult(writer));
-
-        return writer.toString();
+        return documentToString(document);
     }
 }

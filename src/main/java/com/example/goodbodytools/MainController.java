@@ -18,6 +18,9 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignL;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.example.goodbodytools.MainApp.LOGGER;
+import static com.example.goodbodytools.MainApp.TEMP_DATA;
+
 public class MainController {
     @FXML
     public TitledPane textFormatterItem;
@@ -36,7 +39,9 @@ public class MainController {
         Platform.runLater(this::buildMenuItems);
         buildToolbar();
         MessageServiceHandler messageServiceHandler = new MessageServiceHandler(mainBorderPane);
-
+        MessageServiceHandler.addMessage(String.format("Welcome %s",System.getProperty("user.name")), "", "success");
+        TEMP_DATA.setJsonText("");
+        TEMP_DATA.setXmlText("");
     }
     private void buildToolbar() {
         VBox box = new VBox();
@@ -114,8 +119,9 @@ public class MainController {
             Parent root = loader.load();
             mainBorderPane.setCenter(root);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            LOGGER.error(e.getMessage());
         }
 
     }

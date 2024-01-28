@@ -25,7 +25,7 @@
                     <CodeArea fx:id="mainCodeArea" prefHeight="600.0" prefWidth="400.0" stylesheets="json-highlighting.css" />
                 </VBox>
                 <VBox>
-                    <CodeArea fx:id="parsedCodeArea" editable="false" prefHeight="600.0" prefWidth="400.0" stylesheets="json-highlighting.css" />
+                    <CodeArea fx:id="parsedCodeArea" prefHeight="600.0" prefWidth="400.0" stylesheets="json-highlighting.css" editable="false"/>
                 </VBox>
             </SplitPane>
             <Label fx:id="infoLabel" prefHeight="30.0" textAlignment="CENTER" textOverrun="WORD_ELLIPSIS">

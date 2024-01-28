@@ -21,6 +21,7 @@ module com.example.goodbodytools {
     requires org.kordamp.ikonli.material2;
     requires org.apache.commons.lang3;
     requires jdk.xml.dom;
+    requires org.apache.logging.log4j;
 
 
     opens com.example.goodbodytools to javafx.fxml;

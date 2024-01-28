@@ -70,7 +70,15 @@ public class MessageServiceHandler {
             e.consume();
         });
 
-        messages.add(msgToAdd);
+
+        Message finalMsgToAdd2 = msgToAdd;
+        boolean containsMessage = messages.stream().anyMatch(message -> message.getTitle().equals(finalMsgToAdd2.getTitle()));
+        System.out.println("Does the list contain the message? " + containsMessage);
+        if (!containsMessage){
+            messages.add(msgToAdd);
+        }
+
+
         updateMessagePane();
     }
 

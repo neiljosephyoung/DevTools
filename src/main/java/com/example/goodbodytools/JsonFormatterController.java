@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.goodbodytools.MainApp.*;
+
 
 public class JsonFormatterController {
 
@@ -90,11 +92,7 @@ public class JsonFormatterController {
 
     public JsonFormatterController() {
         // Initialize PauseTransition with a delay of 1 second (adjust as needed)
-        textformatPause = new PauseTransition(Duration.seconds(0));
-        // Set an action to be performed when the pause is finished
-        textformatPause.setOnFinished(event -> {
-            handleTextAreaChanged();
-        });
+          textformatPause = new PauseTransition(Duration.seconds(0));
     }
 
     public static TreeItem<String> populateTree(String name, Object json, List<String> parentKeys) {
@@ -204,12 +202,16 @@ public class JsonFormatterController {
 
     @FXML
     private void initialize() {
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            LOGGER.info("Uncaught exception in thread {}.", t, e);
+        });
+
         Card card1 = new Card();
         card1.getStyleClass().add(Styles.ELEVATED_2);
 
         card1.setHeader(new Tile(
-                "Text Formatter",
-                "This service will auto parse for XML or JSON structures just paste in the data"
+                "JSON Formatter",
+                "This service will auto parse for JSON structures just paste in the data"
         ));
         //card1.setBody(new Label("This is content"));
 
@@ -222,7 +224,7 @@ public class JsonFormatterController {
         // Add a keyTyped event handler to the TextArea
         mainCodeArea.setOnKeyTyped(event -> {
             // When a key is typed, restart the pause timer
-            textformatPause.playFromStart();
+            handleTextAreaChanged();
         });
 
         // Set the text color using inline CSS
@@ -238,14 +240,11 @@ public class JsonFormatterController {
         });
 
         initCodeAreasDefault();
-
         buildDataOptionsTile();
-        mainCodeArea.replaceText(DataUtils.readFile("mainCodeArea.txt"));
-        parsedCodeArea.replaceText(DataUtils.readFile("parsedCodeArea.txt"));
-
-        mainCodeArea.requestFocus();
-        handleTextAreaChanged();
-
+//        mainCodeArea.replaceText(DataUtils.readFile("mainCodeArea.txt"));
+          mainCodeArea.replaceText(TEMP_DATA.getJsonText());
+//        parsedCodeArea.replaceText(DataUtils.readFile("parsedCodeArea.txt"));
+          mainCodeArea.requestFocus();
     }
 
     private void buildDataOptionsTile(){
@@ -417,6 +416,10 @@ public class JsonFormatterController {
         menuItems.add(new MenuItem("Undo"));
         menuItems.add(new MenuItem("Redo"));
 
+        for (MenuItem item : menuItems) {
+            item.setStyle(CONTEXT_FONT);
+        }
+
         // Set actions for menu items
         menuItems.get(0).setOnAction(e -> codeArea.cut());
         menuItems.get(1).setOnAction(e -> codeArea.copy());
@@ -454,8 +457,7 @@ public class JsonFormatterController {
                 infoLabel.setText("JSON Data Detected");
                 parsedCodeArea.clear();
                 parsedCodeArea.replaceText(json);
-                DataUtils.writeFile("parsedCodeArea.txt",json);
-                DataUtils.writeFile("mainCodeArea.txt",json);
+                TEMP_DATA.setJsonText(json);
             });
             return;
         }
@@ -509,18 +511,20 @@ public class JsonFormatterController {
     }
 
     private void formatText(String rawText) {
-        if (DataUtils.isJSON(rawText)){
-            String xml = DataUtils.parseJsonToPretty(rawText);
-            Platform.runLater(() ->{
-                infoLabel.setText("XML Data Detected");
-                parsedCodeArea.replaceText(xml);
-                DataUtils.writeFile("parsedCodeArea.txt",xml);
-                DataUtils.writeFile("mainCodeArea.txt",xml);
-            });
-        }
-        else {
-            infoLabel.setText("Unsupported data format");
-            System.out.println("Unsupported data format.");
+        if (!rawText.isEmpty()) {
+            if (DataUtils.isJSON(rawText)){
+                String json = DataUtils.parseJsonToPretty(rawText);
+                Platform.runLater(() ->{
+                    infoLabel.setText("XML Data Detected");
+                    parsedCodeArea.replaceText(json);
+                    TEMP_DATA.setJsonText(json);
+                    handleTextAreaChanged();
+                });
+            }
+            else {
+                infoLabel.setText("Unsupported data format");
+                System.out.println("Unsupported data format.");
+            }
         }
     }
 }
