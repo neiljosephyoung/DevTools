@@ -77,8 +77,101 @@ public class MessageServiceHandler {
         if (!containsMessage){
             messages.add(msgToAdd);
         }
+        updateMessagePane();
+    }
+    public static void addSuccessMessage(String title, String desc) {
+        FontIcon icon;
+        Message msgToAdd = null;
 
+        icon = new FontIcon(MaterialDesignC.CHECK_CIRCLE_OUTLINE);
+        msgToAdd = new Message(title, desc, icon);
+        msgToAdd.getStyleClass().add(Styles.SUCCESS);
 
+        Message finalMsgToAdd = msgToAdd;
+        assert msgToAdd != null;
+        Message finalMsgToAdd1 = msgToAdd;
+        msgToAdd.setOnClose(e -> {
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), finalMsgToAdd1);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(event -> {
+                messages.remove(finalMsgToAdd);
+                updateMessagePane();
+            });
+            fadeOut.play();
+            e.consume();
+        });
+
+        Message finalMsgToAdd2 = msgToAdd;
+        boolean containsMessage = messages.stream().anyMatch(message -> message.getTitle().equals(finalMsgToAdd2.getTitle()));
+        System.out.println("Does the list contain the message? " + containsMessage);
+        if (!containsMessage){
+            messages.add(msgToAdd);
+        }
+        updateMessagePane();
+    }
+
+    public static void addWarningMessage(String title, String desc) {
+        FontIcon icon;
+        Message msgToAdd = null;
+
+        icon = new FontIcon(Material2OutlinedMZ.OUTLINED_FLAG);
+        msgToAdd = new Message(title, desc, icon);
+        msgToAdd.getStyleClass().add(Styles.WARNING);
+
+        Message finalMsgToAdd = msgToAdd;
+        assert msgToAdd != null;
+        Message finalMsgToAdd1 = msgToAdd;
+        msgToAdd.setOnClose(e -> {
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), finalMsgToAdd1);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(event -> {
+                messages.remove(finalMsgToAdd);
+                updateMessagePane();
+            });
+            fadeOut.play();
+            e.consume();
+        });
+
+        Message finalMsgToAdd2 = msgToAdd;
+        boolean containsMessage = messages.stream().anyMatch(message -> message.getTitle().equals(finalMsgToAdd2.getTitle()));
+        System.out.println("Does the list contain the message? " + containsMessage);
+        if (!containsMessage){
+            messages.add(msgToAdd);
+        }
+        updateMessagePane();
+    }
+
+    public static void addErrorMessage(String title, String desc) {
+        FontIcon icon;
+        Message msgToAdd = null;
+
+        icon = new FontIcon(Material2OutlinedAL.ERROR_OUTLINE);
+        msgToAdd = new Message(title, desc, icon);
+        msgToAdd.getStyleClass().add(Styles.DANGER);
+
+        Message finalMsgToAdd = msgToAdd;
+        assert msgToAdd != null;
+        Message finalMsgToAdd1 = msgToAdd;
+        msgToAdd.setOnClose(e -> {
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), finalMsgToAdd1);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(event -> {
+                messages.remove(finalMsgToAdd);
+                updateMessagePane();
+            });
+            fadeOut.play();
+            e.consume();
+        });
+
+        Message finalMsgToAdd2 = msgToAdd;
+        boolean containsMessage = messages.stream().anyMatch(message -> message.getTitle().equals(finalMsgToAdd2.getTitle()));
+        System.out.println("Does the list contain the message? " + containsMessage);
+        if (!containsMessage){
+            messages.add(msgToAdd);
+        }
         updateMessagePane();
     }
 

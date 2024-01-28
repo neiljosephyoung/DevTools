@@ -468,7 +468,7 @@ public class JsonFormatterController {
     @FXML
     protected void minifyButtonClick(){
         showSpinnerPopup();
-        String rawJson = mainCodeArea.getText();
+        String rawJson = parsedCodeArea.getText();
         System.out.println("Minify clicked: "+rawJson);
         String parsed = DataUtils.minifyText(rawJson);
         parsedCodeArea.replaceText(parsed);

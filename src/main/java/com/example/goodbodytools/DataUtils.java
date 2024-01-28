@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -137,20 +138,25 @@ public class DataUtils {
     }
 
     public static boolean isXML(String data) {
+        boolean response;
         // Sanitize the input data to remove null bytes and trim extra spaces
-        String sanitizedData = data.replaceAll("\\x00", "").replaceAll("\n","").trim();
-
+        String sanitizedData = data.replaceAll("\\x00", "").replaceAll("\n", "").trim();
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             builder.parse(new org.xml.sax.InputSource(new java.io.StringReader(sanitizedData)));
-            return true; // Parsing successful, the string is a valid XML
+            response = true; // Parsing successful, the string is a valid XML
+
         } catch (Exception e) {
-            return false; // Parsing failed, the string is not a valid XML
+            response = false; // Parsing failed, the string is not a valid XML
+            // Consider logging the exception or printing it within CustomException
+            throw new CustomException("XML Parse Error", e);
         }
+        return response;
     }
 
-public static String toggleCase(String data){
+
+    public static String toggleCase(String data){
         // Handle Ctrl + Shift + U shortcut here
         System.out.println("Ctrl + Shift + U pressed");
 
